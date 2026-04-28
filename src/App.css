@@ -5,6 +5,13 @@
   text-align: center;
 }
 
+@keyframes progress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+.animate-progress {
+  animation: progress 4.5s linear forwards;
+}
 .logo {
   height: 6em;
   padding: 1.5em;

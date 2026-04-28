@@ -13,7 +13,7 @@ export default function StockList({ type }: StockListProps) {
   const query = type === 'raw' ? rawQuery : finishedQuery;
   const { data: rawData = [], isLoading, error } = query;
 
-  // Transformación aquí (TS ya sabe que rawData es StockItem[])
+  // Transformamos aquí (TS ahora entiende que rawData es StockItem[])
   const stock = rawData
     .filter((item: StockItem) => item.is_raw === (type === 'raw' ? 1 : 0))
     .map((item: StockItem) => ({

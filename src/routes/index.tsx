@@ -4,6 +4,7 @@ import {
   RouterProvider,
   Navigate,
   Outlet,
+  Link,
 } from "react-router-dom";
 
 import LoginForm from "@/features/auth/components/LoginForm"; // sin llaves si es default export
@@ -11,23 +12,20 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/types/user";
 import AppLayout from "@/layouts/AppLayout";
 import WarehouseRoutes from "@/features/warehouse/WarehouseRoutes";
+import AdminProductsList from "@/features/admin/components/AdminProductsList"; // ← nuevo import
+import AdminProductForm from "@/features/admin/components/AdminProductForm"; // ← nuevo import (si lo usas como página)
+
+import AdminLayout from "@/features/admin/AdminLayout";
+import WarehouseLayout from "@/features/warehouse/WarehouseLayout";
+import StockList from "@/features/warehouse/components/StockList";
+import TransformForm from "@/features/warehouse/components/TransformForm";
+import AdminDashboardContent from "@/features/admin/components/AdminDashboardContent";
+import AdminUsers from "@/features/admin/components/AdminUsers";
+import AdminProducts from "@/features/admin/components/AdminProducts";
+import ImportacionesPage from "@/features/admin/components/ImportacionesPage";
+import WarehouseDashboardContent from "@/features/warehouse/components/WarehouseDashboardContent";
 
 // Componente dummy (corrige la sintaxis)
-const Dashboard = ({ title }: { title: string }) => (
-  <div className="p-8 text-2xl font-bold">{title} Dashboard</div>
-);
-const AdminDashboard = () => (
-  <AppLayout
-    title="Admin Dashboard"
-    sidebarItems={[
-      { label: "Usuarios", path: "/admin/users" },
-      { label: "Reportes", path: "/admin/reports" },
-      // agrega más después
-    ]}
-  >
-    <p className="text-lg">Contenido del admin: usuarios, reportes, etc.</p>
-  </AppLayout>
-);
 
 const WarehouseDashboard = () => (
   <AppLayout
@@ -85,19 +83,41 @@ function ProtectedRoute({ allowedRoles }: { allowedRoles: Role[] }) {
 const router = createBrowserRouter([
   { path: "/login", element: <LoginForm /> },
 
-  // Admin
   {
     element: <ProtectedRoute allowedRoles={["ADMIN"]} />,
-    children: [{ path: "/admin", element: <AdminDashboard /> }],
+    children: [
+      {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <AdminDashboardContent /> },
+          { path: "users", element: <AdminUsers /> },
+          { path: "products", element: <AdminProducts /> },
+
+          // ← NUEVA RUTA AQUÍ
+          { path: "importaciones", element: <ImportacionesPage /> },
+
+          { path: "reports", element: <div>Reportes (en construcción)</div> },
+          // Agrega más rutas aquí
+        ],
+      },
+    ],
   },
 
-  // Warehouse - ¡aquí está la clave!
   {
     element: <ProtectedRoute allowedRoles={["WAREHOUSE", "ADMIN"]} />,
     children: [
       {
-        path: "/warehouse/*", // ← el * permite todas las sub-rutas
-        element: <WarehouseRoutes />,
+        path: "/warehouse",
+        element: <WarehouseLayout />,
+        children: [
+          { index: true, element: <WarehouseDashboardContent /> },
+          // Tus rutas de warehouse
+          { path: "stock/raw", element: <StockList type="raw" /> },
+          { path: "stock/finished", element: <StockList type="finished" /> },
+          { path: "transform", element: <TransformForm /> },
+          // ...
+        ],
       },
     ],
   },
@@ -109,7 +129,7 @@ const router = createBrowserRouter([
   },
 
   { path: "/", element: <Navigate to="/login" replace /> },
-  { path: "*", element: <div>404 - Página no encontrada</div> }, // fallback global
+  { path: "*", element: <div>404 - Página no encontrada</div> },
 ]);
 
 export default function AppRoutes() {

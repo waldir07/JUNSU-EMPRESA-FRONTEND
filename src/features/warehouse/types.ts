@@ -21,6 +21,11 @@ export interface StockItem {
       model: string;
     };
   };
+  warehouse?: {
+    id: number;
+    name: string;
+    code: string;
+  };
 }
 
 export interface DisplayStockItem {
@@ -32,6 +37,7 @@ export interface DisplayStockItem {
   is_raw: number;
   sku?: string;
   product_variant_id: number;
+  units_per_box?: number;  // ← agregado para cajones (opcional)
 }
 
 export type StockList = StockItem[];
