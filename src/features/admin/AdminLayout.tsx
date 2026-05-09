@@ -7,6 +7,7 @@ const adminSidebarItems = [
   { label: "Usuarios", path: "/admin/users" },
   { label: "Productos", path: "/admin/products" },
   { label: "Importaciones", path: "/admin/importaciones" },   // ← NUEVO
+  { label: "Auditoría de Stock", path: "/admin/auditoria-stock" },   // ← NUEVO
   { label: "Reportes", path: "/admin/reports" },
 ];
 

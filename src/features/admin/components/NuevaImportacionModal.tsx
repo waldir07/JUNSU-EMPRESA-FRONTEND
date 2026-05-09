@@ -208,7 +208,7 @@ export default function NuevaImportacionModal({
                   <option value="0">Selecciona producto...</option>
                   {rawProducts.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.name} — {p.base_code}
+                      {p.name} — {p.is_raw ? 'M-' : ''}{p.base_code}
                     </option>
                   ))}
                 </select>

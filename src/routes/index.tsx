@@ -10,11 +10,10 @@ import {
 import LoginForm from "@/features/auth/components/LoginForm"; // sin llaves si es default export
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/types/user";
-import AppLayout from "@/layouts/AppLayout";
-import WarehouseRoutes from "@/features/warehouse/WarehouseRoutes";
-import AdminProductsList from "@/features/admin/components/AdminProductsList"; // ← nuevo import
-import AdminProductForm from "@/features/admin/components/AdminProductForm"; // ← nuevo import (si lo usas como página)
-
+import SendToStorePage from "@/features/warehouse/pages/SendToStorePage";
+// 1. Importa la nueva página (ajusta la ruta si es diferente)
+import InventoryAdjustmentPage from "@/features/inventory/pages/InventoryAdjustmentPage";
+import InventoryAuditPage from "@/features/admin/components/InventoryAuditPage";
 import AdminLayout from "@/features/admin/AdminLayout";
 import WarehouseLayout from "@/features/warehouse/WarehouseLayout";
 import StockList from "@/features/warehouse/components/StockList";
@@ -24,36 +23,12 @@ import AdminUsers from "@/features/admin/components/AdminUsers";
 import AdminProducts from "@/features/admin/components/AdminProducts";
 import ImportacionesPage from "@/features/admin/components/ImportacionesPage";
 import WarehouseDashboardContent from "@/features/warehouse/components/WarehouseDashboardContent";
+import TransferHistoryPage from "@/features/warehouse/components/TransferDetailModal";
+import StoreRoutes from "@/features/store/StoreRoutes";
 
 // Componente dummy (corrige la sintaxis)
 
-const WarehouseDashboard = () => (
-  <AppLayout
-    title="Warehouse Dashboard"
-    sidebarItems={[
-      { label: "Stock Raw", path: "/warehouse/stock" },
-      { label: "Transformaciones", path: "/warehouse/transform" },
-    ]}
-  >
-    <p className="text-lg">
-      Contenido del warehouse: stock raw materials, transformaciones.
-    </p>
-  </AppLayout>
-);
 
-const StoreDashboard = () => (
-  <AppLayout
-    title="Store Dashboard"
-    sidebarItems={[
-      { label: "Ventas", path: "/store/sales" },
-      { label: "Stock Finished", path: "/store/stock" },
-    ]}
-  >
-    <p className="text-lg">
-      Contenido del store: ventas, stock finished products.
-    </p>
-  </AppLayout>
-);
 
 function ProtectedRoute({ allowedRoles }: { allowedRoles: Role[] }) {
   const { user, isLoading } = useAuth();
@@ -96,7 +71,7 @@ const router = createBrowserRouter([
 
           // ← NUEVA RUTA AQUÍ
           { path: "importaciones", element: <ImportacionesPage /> },
-
+          { path: "auditoria-stock", element: <InventoryAuditPage /> },
           { path: "reports", element: <div>Reportes (en construcción)</div> },
           // Agrega más rutas aquí
         ],
@@ -116,6 +91,10 @@ const router = createBrowserRouter([
           { path: "stock/raw", element: <StockList type="raw" /> },
           { path: "stock/finished", element: <StockList type="finished" /> },
           { path: "transform", element: <TransformForm /> },
+          { path: "send-to-store", element: <SendToStorePage /> }, // Deberás crear la página similar a la de ajustes
+          { path: "transfers", element: <TransferHistoryPage /> },
+          { path: "ajustes", element: <InventoryAdjustmentPage /> },
+
           // ...
         ],
       },
@@ -124,8 +103,14 @@ const router = createBrowserRouter([
 
   // Store
   {
-    element: <ProtectedRoute allowedRoles={["STORE", "ADMIN"]} />,
-    children: [{ path: "/store", element: <StoreDashboard /> }],
+    element: <ProtectedRoute allowedRoles={["STORE", "ADMIN"]} />, // Ambos pueden entrar
+    children: [
+      {
+        path: "/store/*",
+        element: <ProtectedRoute allowedRoles={["STORE", "ADMIN"]} />,
+        children: [{ path: "*", element: <StoreRoutes /> }],
+      },
+    ],
   },
 
   { path: "/", element: <Navigate to="/login" replace /> },

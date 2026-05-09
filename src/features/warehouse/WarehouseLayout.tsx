@@ -7,9 +7,9 @@ const warehouseSidebarItems = [
   { label: "Stock Materia Prima", path: "/warehouse/stock/raw" },
   { label: "Stock Producto Terminado", path: "/warehouse/stock/finished" },
   { label: "Transformar", path: "/warehouse/transform" },
+  { label: "Historial de Envíos", path: "/warehouse/transfers" },
   { label: "Enviar a Tienda", path: "/warehouse/send-to-store" },
-  { label: "Alertas Bajo Stock", path: "/warehouse/alerts" },
-  { label: "Movimientos", path: "/warehouse/movements" },
+  { label: "Reportar falla/merma", path: "/warehouse/ajustes" },
 ];
 
 export default function WarehouseLayout() {

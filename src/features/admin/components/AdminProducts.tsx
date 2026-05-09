@@ -74,10 +74,13 @@ export default function AdminProducts() {
       model: formData.model || null,
       package_size: formData.package_size,
       is_raw: formData.is_raw,
+      is_direct_sale: formData.is_direct_sale, // <-- Aseguramos que este campo también se envíe al backend
       cost_price: formData.cost_price,
       supplier: formData.supplier || null,
       notes: formData.notes || null,
-      ...(formData.initial_stock !== undefined && !editingProduct && { initial_stock: formData.initial_stock }),
+      amperage: formData.amperage || null,
+      poles: formData.poles || null,
+      //...(formData.initial_stock !== undefined && !editingProduct && { initial_stock: formData.initial_stock }),
     };
 
     if (editingProduct) {

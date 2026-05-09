@@ -12,6 +12,12 @@ export interface Product {
   cost_price: number;
   supplier?: string | null;
   notes?: string | null;
+  is_direct_sale: boolean; //<-- Nuevo campo para distinguir productos de venta directa -->
+  // --- NUEVOS CAMPOS ---
+  raw_product_id?: number | null;
+  amperage?: number | null;
+  poles?: number | null;
+
 }
 
 export const useAdminProducts = () => {
@@ -27,6 +33,8 @@ export const useAdminProducts = () => {
         package_size: Number(product.package_size),
         cost_price: Number(product.cost_price),
         is_raw: Boolean(product.is_raw),
+        is_direct_sale: Boolean(product.is_direct_sale), // <-- Aseguramos que este campo también sea booleano, para mapear correctamente en el frontend
+        
       }));
     },
   });
